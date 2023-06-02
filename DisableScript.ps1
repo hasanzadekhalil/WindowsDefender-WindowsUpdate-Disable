@@ -5,21 +5,12 @@ if ($DefenderStatus -eq $false) {
     Start-Sleep -Seconds 10
 } else {
     Write-Host "Defender is Not Running"
-
-    $downloadUrl = "https://github.com/jbara2002/windows-defender-remover/releases/download/release_def_12_4_6/DefenderRemover.exe"
-    $downloadPath = "$env:TEMP\disable-defender.exe"
-
-    # Download the application
-    Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
-
+    Write-Host "Windows Update is Disabling..."
     sc.exe config wuauserv start=disabled
     sc.exe stop wuauserv
     $AUSettings = (New-Object -com "Microsoft.Update.AutoUpdate").Settings
     $AUSettings.NotificationLevel = 1
     $AUSettings.Save
-
-    Start-Process -FilePath $downloadPath /Y -Verb RunAs
-    Write-Host "Windows Update is Disabling..."
     # Disable Windows Update service using Group Policy
     $groupPolicyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
     $groupPolicyValueName = "DisableWindowsUpdateAccess"
@@ -33,16 +24,11 @@ if ($DefenderStatus -eq $false) {
 
     # Set Windows Update service startup type to disabled
     Set-Service -Name "wuauserv" -StartupType Disabled
-    Write-Host "Defender is Not Running"
-    # Prompt for confirmation
-    $confirm = Read-Host "A reboot is recommended. Do you want to proceed? (Y/N)"
-
-    if ($confirm -eq "Y" -or $confirm -eq "y") {
-        # Reboot the computer
-        Restart-Computer -Force
-    }
-    else {
-        Write-Host "Reboot canceled."
-    }
+    
+    $downloadUrl = "https://github.com/jbara2002/windows-defender-remover/releases/download/release_def_12_4_6/DefenderRemover.exe"
+    $downloadPath = "$env:TEMP\disable-defender.exe"
+    # Download the application
+    Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
+    Start-Process -FilePath $downloadPath /Y -Verb RunAs
 }
     
