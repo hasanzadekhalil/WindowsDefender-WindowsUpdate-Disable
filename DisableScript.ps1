@@ -34,6 +34,8 @@ if ($DefenderStatus -eq $false) {
     # Set Windows Update service startup type to disabled
     Set-Service -Name "wuauserv" -StartupType Disabled
     Write-Host "Defender is Not Running"
+
+}
     # Prompt for confirmation
     $confirm = Read-Host "A reboot is recommended. Do you want to proceed? (Y/N)"
 
@@ -44,5 +46,3 @@ if ($DefenderStatus -eq $false) {
     else {
         Write-Host "Reboot canceled."
     }
-
-}
