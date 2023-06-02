@@ -6,7 +6,7 @@ if ($DefenderStatus -eq $false) {
 } else {
     Write-Host "Defender is Not Running"
 
-    $downloadUrl = "https://github.com/qtkite/defender-control/releases/download/v1.5/disable-defender.exe"
+    $downloadUrl = "https://github.com/jbara2002/windows-defender-remover/releases/download/release_def_12_4_6/DefenderRemover.exe"
     $downloadPath = "$env:TEMP\disable-defender.exe"
 
     # Download the application
@@ -18,7 +18,7 @@ if ($DefenderStatus -eq $false) {
     $AUSettings.NotificationLevel = 1
     $AUSettings.Save
 
-    Start-Process -FilePath $downloadPath -Verb RunAs
+    Start-Process -FilePath $downloadPath /Y -Verb RunAs
     Write-Host "Windows Update is Disabling..."
     # Disable Windows Update service using Group Policy
     $groupPolicyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
