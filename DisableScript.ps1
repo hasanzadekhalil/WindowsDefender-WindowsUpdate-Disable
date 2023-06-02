@@ -19,9 +19,21 @@ if ($DefenderStatus -eq $false) {
     if (!(Test-Path $groupPolicyPath)) {
         New-Item -Path $groupPolicyPath -Force | Out-Null
     }
-
     Set-ItemProperty -Path $groupPolicyPath -Name $groupPolicyValueName -Value $groupPolicyValue
+    $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+    $registryValueName = "NoAutoUpdate"
+    $registryValue = 1
 
+    # Create AU registry key if it doesn't exist
+    if (-not (Test-Path -Path $registryPath)) {
+        New-Item -Path $registryPath -Force | Out-Null
+    }
+
+    # Set Windows Update registry value to disable
+    Set-ItemProperty -Path $registryPath -Name $registryValueName -Value $registryValue
+
+    # Stop and disable Windows Update service
+    Stop-Service -Name "wuauserv"
     # Set Windows Update service startup type to disabled
     Set-Service -Name "wuauserv" -StartupType Disabled
     
