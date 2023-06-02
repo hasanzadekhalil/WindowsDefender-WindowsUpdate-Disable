@@ -2,6 +2,7 @@ $DefenderStatus = (Get-MpPreference).DisableRealtimeMonitoring
 
 if ($DefenderStatus -eq $false) {
     Write-Host "Defender is Running! All Features of Windows Security need to be disabled manually the first time, please do this first and then run script again!"
+    Start-Sleep -Seconds 10
 } else {
     Write-Host "Defender is Not Running"
 
