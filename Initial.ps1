@@ -4,5 +4,5 @@ $scriptPath = "$env:TEMP\DisableScript.ps1"
 # Download the script
 Invoke-WebRequest -Uri $url -OutFile $scriptPath
 
-# Execute the script with bypassed execution policy
-powershell.exe -ExecutionPolicy Bypass -File $scriptPath
+# Execute the script with administrator permissions
+Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs
